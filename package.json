@@ -1,5 +1,5 @@
 {
-  "name": "dynamodb",
+  "name": "dynamodb-x",
   "version": "1.2.0",
   "contributors": [
     "Ryan Fitzgerald <ryan@codebrewstudios.com>",
@@ -11,7 +11,7 @@
     "test": "make test",
     "dynamodb-local": "./test/bin/dynamodb-local"
   },
-  "repository": "git://github.com/baseprime/dynamodb.git",
+  "repository": "git://github.com/jcrugzz/dynamodb.git",
   "keywords": [
     "datamapper",
     "DynamoDB",

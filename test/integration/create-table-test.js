@@ -9,6 +9,8 @@ var dynamo = require('../../index'),
     Joi    = require('joi');
 
 chai.should();
+process.env.AWS_ACCESS_KEY_ID = 'foobar';
+process.env.AWS_SECRET_ACCESS_KEY = 'foobar';
 
 describe('Create Tables Integration Tests', function() {
   this.timeout(0);

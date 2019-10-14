@@ -10,6 +10,8 @@ var dynamo = require('../../index'),
     Joi    = require('joi');
 
 chai.should();
+process.env.AWS_ACCESS_KEY_ID = 'foobar';
+process.env.AWS_SECRET_ACCESS_KEY = 'foobar';
 
 var User, Tweet, Movie, DynamicKeyModel; // models
 var internals = {};

@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "async": "^2.6.3",
+    "async": "^1.5.2",
     "aws-sdk": "^2.186.x",
     "bunyan": "^1.8.12",
     "joi": "^10.6.0",

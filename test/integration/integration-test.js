@@ -9,7 +9,6 @@ var dynamo = require('../../index'),
     uuid   = require('uuid'),
     Joi    = require('joi');
 
-chai.should();
 process.env.AWS_ACCESS_KEY_ID = 'foobar';
 process.env.AWS_SECRET_ACCESS_KEY = 'foobar';
 
@@ -86,7 +85,7 @@ describe('DynamoDB Integration Tests', function() {
     User = dynamo.define('dynamo-int-test-user', {
       hashKey : 'id',
       schema : {
-        id            : Joi.string().default(generateId, 'uuid.v4'),
+        id            : Joi.string().default(generateId),
         email         : Joi.string().required(),
         name          : Joi.string().allow(''),
         age           : Joi.number().min(10),
@@ -111,7 +110,7 @@ describe('DynamoDB Integration Tests', function() {
         content           : Joi.string(),
         num               : Joi.number(),
         tag               : Joi.string(),
-        PublishedDateTime : Joi.date().default(Date.now, 'Date.now()')
+        PublishedDateTime : Joi.date().default(Date.now)
       },
       indexes : [
         { hashKey : 'UserId', rangeKey : 'PublishedDateTime', type : 'local', name : 'PublishedDateTimeIndex'}
@@ -410,7 +409,7 @@ describe('DynamoDB Integration Tests', function() {
       };
 
       Movie.update({title : 'Movie 0', description : 'This is a description'}, params, function (err, mov) {
-        expect(err).to.not.exist();
+        expect(err).to.not.exist;
 
         expect(mov.get('description')).to.eql('This is a description');
         expect(mov.get('releaseYear')).to.eql(2002);
@@ -506,7 +505,7 @@ describe('DynamoDB Integration Tests', function() {
         _.each(data.Items, function (t) {
           expect(t.get('UserId')).to.eql('userid-1');
 
-          var published = t.get('PublishedDateTime');
+          var published = new Date(t.get('PublishedDateTime'));
 
           if(prev) {
             expect(published).to.be.at.most(prev);
@@ -534,7 +533,7 @@ describe('DynamoDB Integration Tests', function() {
         _.each(data.Items, function (t) {
           expect(t.get('UserId')).to.eql('userid-1');
 
-          var published = t.get('PublishedDateTime');
+          var published = new Date(t.get('PublishedDateTime'));
 
           if(prev) {
             expect(published).to.be.at.most(prev);
@@ -559,7 +558,7 @@ describe('DynamoDB Integration Tests', function() {
           expect(t.get('UserId')).to.eql('userid-1');
           expect(t.get('num')).to.be.above(3);
           expect(t.get('num')).to.be.below(9);
-          expect(t.get('tag')).to.exist();
+          expect(t.get('tag')).to.exist;
         });
 
         return done();
@@ -575,7 +574,7 @@ describe('DynamoDB Integration Tests', function() {
 
           _.each(data.Items, function (t) {
             expect(t.get('UserId')).to.eql('userid-1');
-            expect(t.get('tag')).to.exist();
+            expect(t.get('tag')).to.exist;
           });
 
           return done();
@@ -601,38 +600,38 @@ describe('DynamoDB Integration Tests', function() {
 
     it('should return tweets that match expression filters', function(done) {
       Tweet.query('userid-1')
-      .filterExpression('#num BETWEEN :low AND :high AND attribute_exists(#tag)')
-      .expressionAttributeValues({ ':low' : 4, ':high' : 8})
-      .expressionAttributeNames({ '#num' : 'num', '#tag' : 'tag'})
-      .exec(function (err, data) {
-        expect(err).to.not.exist;
-        expect(data.Items).to.have.length.above(0);
+        .filterExpression('#num BETWEEN :low AND :high AND attribute_exists(#tag)')
+        .expressionAttributeValues({ ':low' : 4, ':high' : 8})
+        .expressionAttributeNames({ '#num' : 'num', '#tag' : 'tag'})
+        .exec(function (err, data) {
+          expect(err).to.not.exist;
+          expect(data.Items).to.have.length.above(0);
 
-        _.each(data.Items, function (t) {
-          expect(t.get('UserId')).to.eql('userid-1');
-          expect(t.get('num')).to.be.above(3);
-          expect(t.get('num')).to.be.below(9);
-          expect(t.get('tag')).to.exist();
+          _.each(data.Items, function (t) {
+            expect(t.get('UserId')).to.eql('userid-1');
+            expect(t.get('num')).to.be.above(3);
+            expect(t.get('num')).to.be.below(9);
+            expect(t.get('tag')).to.exist;
+          });
+
+          return done();
         });
-
-        return done();
-      });
     });
 
     it('should return tweets with projection expression', function(done) {
       Tweet.query('userid-1')
-      .projectionExpression('#con, UserId')
-      .expressionAttributeNames({ '#con' : 'content'})
-      .exec(function (err, data) {
-        expect(err).to.not.exist;
-        expect(data.Items).to.have.length.above(0);
+        .projectionExpression('#con, UserId')
+        .expressionAttributeNames({ '#con' : 'content'})
+        .exec(function (err, data) {
+          expect(err).to.not.exist;
+          expect(data.Items).to.have.length.above(0);
 
-        _.each(data.Items, function (t) {
-          expect(t.get()).to.have.keys(['content', 'UserId']);
+          _.each(data.Items, function (t) {
+            expect(t.get()).to.have.keys(['content', 'UserId']);
+          });
+
+          return done();
         });
-
-        return done();
-      });
     });
 
     it('should return all tweets from user', function(done) {

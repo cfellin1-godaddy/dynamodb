@@ -2,25 +2,23 @@ sudo: false
 
 language: node_js
 
-node_js:
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 0.10
-  - 0.12
+matrix:
+  fast_finish: true
+  include:
+    - node_js: '14'
+    - node_js: '12'
+    - node_js: '10'
 
 env:
   global:
     - AWS_ACCESS_KEY_ID=AKID
     - AWS_SECRET_ACCESS_KEY=SECRET
     - AWS_REGION=us-east-1
-before_script:
-  - wget http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz -O /tmp/dynamodb_local_latest.tar.gz
-  - tar -xzf /tmp/dynamodb_local_latest.tar.gz -C /tmp
-  - java -Djava.library.path=/tmp/DynamoDBLocal_lib -jar /tmp/DynamoDBLocal.jar -inMemory &
-  - sleep 2
-addons:
-  hosts:
-    - dynamodb-local
+before_install:
+  - docker pull localstack/localstack:0.11.5
+  - docker run -d --name localstack -p 4569:4569 -e SERVICES=dynamodb --rm localstack/localstack:0.11.5
+
+install: npm install
+
+services:
+  - docker
